@@ -8,13 +8,4 @@ XMR Tools Site Files
 3. checktx.html -- allows for the decoding of one-time-output keys of a particular transaction, associating them with their public account. This requires secret data (either the view private key, or the transaction private key) and an internet connection to MoneroBlocks to get the transaction data.
 4. sign.html -- generates and verifies signatures on arbitrary data using one of your account private keys (spend key or view key)
 5. slowhash.html -- generates the CryptoNight hash of hexadecimal input data; overall not too useful except for visually checking a block's PoW result
-
-A .zip file is provided of the generator page for convenient offline use. To verify the .asc, with gpg installed:
-
-1. Get my key here: https://raw.githubusercontent.com/monero-project/monero/master/utils/gpg_keys/luigi1111.asc
-2. Save it as **luigi1111.asc** and import it at the command line with `gpg --import luigi1111.asc`
-3. In the directory where "addressgen.zip" and "addressgen.zip.asc" are located, type:
-
-`gpg --verify addressgen.zip.asc addressgen.zip`
-
-You should get `gpg: Good signature from "luigi1111 <luigi1111w@gmail.com>"`; you can ingore the warning about the key not being certified.
+6. addressrcv.html -- provides a simple tool to recover a mnemonic if one or two words are missing
