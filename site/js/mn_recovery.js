@@ -5,6 +5,15 @@
 // - user-friendliness
 // when? probably never.
 
+function mnRecover()
+{
+	tgtAddr = document.getElementById('tgtAddr');
+	if (tgtAddr.value.length == 140)
+	{
+		mn_guess(mnemonic.value, mnDictTag.value, tgtAddr.value);
+	}
+}
+
 function mn_guess(str, wordset_name, target_address) {
     'use strict';
     wordset_name = wordset_name || mn_default_wordset;
@@ -115,48 +124,4 @@ function mn_guess(str, wordset_name, target_address) {
 		console.log("Candidates: " + candidates);
 	}
 	else throw "nothing to guess or too many unknowns";
-}
-
-function allRandomMm(){
-    var netbyte = pubAddrNetByte.value;
-    var hs = rand_16();
-    var hs32 = cn_fast_hash(hs);
-    var i = 0;
-    while (hs32 !== sc_reduce32(hs32)){
-        hs = rand_16();
-        hs32 = cn_fast_hash(hs);
-        i++
-    }
-    console.log("Found simplewallet-compatible MyMonero seed after " + i + " attempts (~16 expected).");
-    if (netbyte === "11"){
-        //var hs = rand_16();
-        var mn = mn_encode(hs, mnDictTag.value);
-        var privSk = sc_reduce32(hs32);
-        var pubSk = sec_key_to_pub(privSk);
-        var privVk = sc_reduce32(cn_fast_hash(pubSk));
-        var pubVk = sec_key_to_pub(privVk);
-    } else {
-        //var hs = rand_16();
-        var mn = mn_encode(hs, mnDictTag.value);
-        var privSk = sc_reduce32(hs32);
-        var privVk = sc_reduce32(cn_fast_hash(hs32));
-        var pubSk = sec_key_to_pub(privSk);
-        var pubVk = sec_key_to_pub(privVk);
-        if (netbyte === "13"){
-            var pID = rand_32().slice(0,16);
-        }
-    }
-    var address = toPublicAddr(netbyte, pubSk, pubVk, pID);
-    if (!pID){
-        paymentID.value = "";
-    } else {
-        paymentID.value = pID;
-    }
-    mnemonic.value = mn;
-    hexSeed.value = hs;
-    privSpend.value = privSk;
-    pubSpend.value = pubSk;
-    privView.value = privVk;
-    pubView.value = pubVk;
-    pubAddr.value = address;
 }
