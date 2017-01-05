@@ -8,7 +8,7 @@
 function mnRecover()
 {
 	tgtAddr = document.getElementById('tgtAddr');
-	if (tgtAddr.value.length == 140)
+	if (tgtAddr.value.length == 95)
 	{
 		mn_guess(mnemonic.value, mnDictTag.value, tgtAddr.value);
 	}
@@ -23,6 +23,17 @@ function mn_guess(str, wordset_name, target_address) {
     var wlist = str.split(' ');
     var checksum_word = '';
 	var netbyte = pubAddrNetByte.value;
+	var privSk;
+	var privVk;
+	var pubSk;
+	var pubVk;
+	var address;	
+	var index;
+	var expected_checksum_word;
+	var w1, w2, w3;
+	var x;
+	var i, j, k;
+	
     //if (wlist.length < 12) throw "You've entered too few words, please try again";
     if ((wordset.prefix_len === 0 && (wlist.length % 3 !== 0)) ||
         (wordset.prefix_len > 0 && (wlist.length % 3 === 2))) throw "You've entered too few words, please try again";
@@ -46,27 +57,27 @@ function mn_guess(str, wordset_name, target_address) {
 		console.log("Combinations: " + Math.pow(wordset.words.length,(mn_missing.length)));
 		var candidates=0;
 		//check for maximum 2 missing words;
-		for(var i = 0; i < Math.pow(wordset.words.length,(mn_missing.length)); i++)
+		for(i = 0; i < Math.pow(wordset.words.length,(mn_missing.length)); i++)
 		{
 			//loop all combinations
-			if(i % 1000 == 0)
+			if(i % 10000 == 0)
 			{
-				document.getElementById('mnemonic').innerHTML = i + "/" + Math.pow(wordset.words.length,(mn_missing.length));
+				console.clear();
 			}
-			for (var j = 0; j < mn_missing.length; j++)
+			for (j = 0; j < mn_missing.length; j++)
 			{
 				wlist[mn_missing[j]] = wordset.words[parseInt((i % Math.pow(wordset.words.length,(j+1))) / Math.pow(wordset.words.length,j))];
 			}
 			if (wordset.prefix_len > 0) {
-				var index = mn_get_checksum_index(wlist, wordset.prefix_len);
-				var expected_checksum_word = wlist[index];
+				index = mn_get_checksum_index(wlist, wordset.prefix_len);
+				expected_checksum_word = wlist[index];
 				if (expected_checksum_word.slice(0, wordset.prefix_len) == checksum_word.slice(0, wordset.prefix_len)) {		
 					console.log("i=" + i + " Candidate: " + wlist);
 					candidates+=1;
 					// Decode mnemonic
 					out = "";
-					for (var k = 0; k < wlist.length; k += 3) { /////// heres
-						var w1, w2, w3;
+					for (k = 0; k < wlist.length; k += 3) { /////// heres
+						// var w1, w2, w3;
 						if (wordset.prefix_len === 0) {
 							w1 = wordset.words.indexOf(wlist[k]);
 							w2 = wordset.words.indexOf(wlist[k + 1]);
@@ -79,7 +90,7 @@ function mn_guess(str, wordset_name, target_address) {
 						if (w1 === -1 || w2 === -1 || w3 === -1) {
 							throw "invalid word in mnemonic";
 						}
-						var x = w1 + n * (((n - w1) + w2) % n) + n * n * (((n - w2) + w3) % n);
+						x = w1 + n * (((n - w1) + w2) % n) + n * n * (((n - w2) + w3) % n);
 						if (x % n != w1) throw 'Something went wrong when decoding your private key, please try again';
 						out += mn_swap_endian_4byte(('0000000' + x.toString(16)).slice(-8));
 					}	
@@ -87,19 +98,19 @@ function mn_guess(str, wordset_name, target_address) {
 					if (wlist.length == 24)
 					{
 						//normal
-							var privSk = sc_reduce32(out);
-							var privVk = sc_reduce32(cn_fast_hash(privSk));
+							privSk = sc_reduce32(out);
+							privVk = sc_reduce32(cn_fast_hash(privSk));
 					}
 					else
 					{
 						//mymonero
-							var privSk = sc_reduce32(cn_fast_hash(out));
-							var privVk = sc_reduce32(cn_fast_hash(cn_fast_hash(out)));
+							privSk = sc_reduce32(cn_fast_hash(out));
+							privVk = sc_reduce32(cn_fast_hash(cn_fast_hash(out)));
 					}
 					
-					var pubSk = sec_key_to_pub(privSk);
-					var pubVk = sec_key_to_pub(privVk);
-					var address = toPublicAddr(netbyte, pubSk, pubVk);
+					pubSk = sec_key_to_pub(privSk);
+					pubVk = sec_key_to_pub(privVk);
+					address = toPublicAddr(netbyte, pubSk, pubVk);
 					if (address == target_address)
 					{
 						console.log("It's a match! Address=" + address);
@@ -116,6 +127,11 @@ function mn_guess(str, wordset_name, target_address) {
 					{ 
 						console.log("Candidate not matching: " + i);
 					}
+					privSk = null;
+					privVk = null;
+					pubSk = null;
+					pubVk = null;
+					address = null;
 					
 				}
 			}
