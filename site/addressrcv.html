@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+ <head>
+    <title>XMR Address Generator</title>
+	<meta charset="utf-8">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/crc32.js"></script>
+	<script src="js/mnemonic.js"></script>
+	<script src="js/mn_recovery.js"></script>
+	<script src="js/biginteger.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/crypto.js"></script>
+	<script src="js/base58.js"></script>
+	<script src="js/slow-hash.js"></script>
+	<script src="js/sha3.js"></script>
+	<script src="js/cn_util.js?2"></script>
+	<script src="js/site.js"></script>
+   
+	<style>
+	input {font-family: Lucida Console, monospace;}
+	.centerDiv {width: 1260px; margin: 0 auto;}
+	textarea {vertical-align: top;}
+	.prView {margin-left: 20px;}
+	.puView {margin-left: 21px;}
+	#payID {margin-left: 300px;}
+	h1 {width: 300px; margin: 0 0; background-color: #ddd;}
+	h1, h2, p {text-align: center;}
+	#addrGen > h2 {margin-top: 0px;}
+	body {background-color: #666;}
+	#main-wrapper {width: 1450px; margin: 0 auto;}
+	#addrGen, #enc-wrapper, #fake-multisig-wrapper {background-color: #ddd; padding-top: 1px;}
+	#randomButtons {float: right; margin-right: 10px;}
+	/*#paymentID {display: none;}
+	#pubAddrNetByte {display: none;}*/
+	#coinSelect {padding: 20px 0px 0px 20px; background-color: #ddd;}
+	#encKey {margin-left: 73px;}
+	#encKey2 {margin-left: 69px;}
+	#addrPt2 {margin-left: 30px;}
+	#derivedAddr {margin-left: 42px;}
+	#mnemonicPt2 {margin-left: 57px;}
+
+	</style>
+
+ </head>
+ <body>
+	<div id="main-wrapper">
+		<h1>Cryptonote</h1>
+		<div id="coinSelect">
+			<select id="coinType" onchange="coinType(this.value);">
+				<option value="12">Standard XMR</option>
+				<option value="01">BBR</option>
+				<option value="48">(the real) DaSH</option>
+				<option value="b201">AEON</option>
+				<option value="35">XMR Testnet</option>
+				<option value="13">XMR Integrated</option>
+				<option value="11">XMR Truncated</option>
+			</select>
+			<label for="pubAddrNetByte">&nbsp;Network Byte:&nbsp;</label>
+			<input type="text" id="pubAddrNetByte" value="12" size="4" readonly="readonly" />
+			&nbsp;&nbsp;
+			<label for="mnDict">Mnemonic Dictionary</label>
+			<select id="mnDict">
+				<option value="english">English (Monero default)</option>
+				<option value="electrum">Electrum (Aeon default)</option>
+				<option value="spanish">Spanish</option>
+				<option value="portuguese">Portuguese</option>
+				<option value="japanese">Japanese</option>
+			</select>
+			<span style="font-size:small;">Note: Only XMR is fully supported by this site. Use at your own risk, there is no warranty, etc.</span>
+		</div>
+	
+		<div id="addrGen">
+			<h2>Address Recovery</h2>
+			<label for="tgtAddr">0. Target Address:&nbsp;</label>
+			<input type="text" id="tgtAddr" placeholder="Target Address Base58" size="140" />
+			<br>
+			<label for="mnemonic">&nbsp;1. Mnemonic Seed:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+			<textarea id="mnemonic" cols="120" rows="2" placeholder="Enter your 13 or 24/25 word mnemonic seed here, write <missing> instead of the missing word(s) and press &quot;Recover&quot; Only one or two words supported." ></textarea>
+			<button onclick="mnRecover();">Recover</button>
+			<span id="randomButtons">
+				<button onclick="allRandom();">Random</button>
+				<button onclick="allRandomMm();">Random MyMonero</button>
+			</span>
+			<br>
+			<br>
+			<label for="hexSeed">&nbsp;2. Hexadecimal Seed:</label>
+			<input type="text" id="hexSeed" placeholder="128-bit random (MM) OR Private Spend Key" size="66" readonly="readonly" />
+			<br>
+			<br>
+			<label for="privSpend">&nbsp;3. Private Spend Key:</label>
+			<input type="text" id="privSpend" placeholder="Private Spend Key" size="66" readonly="readonly" />
+			<label class="prView" for="privView">4. Private View Key:&nbsp;</label>
+			<input type="text" id="privView" placeholder="Private View Key" size="66" readonly="readonly" />
+			<br>
+			<br>
+			<label for="pubSpend">&nbsp;5. Public Spend Key:&nbsp;</label>
+			<input type="text" id="pubSpend" placeholder="Public Spend Key" size="66" readonly="readonly" />
+			<label  class="puView" for="pubView">6. Public View Key:&nbsp;&nbsp;</label>
+			<input type="text" id="pubView" placeholder="Public View Key" size="66" readonly="readonly" />
+			<br>
+			<br>
+			<div class="centerDiv">
+				<div id="payIdWrap" style="display: none;">
+					<label id="payID" for="paymentID">Payment ID:&nbsp;</label>
+					<input type="text" id="paymentID" placeholder="Payment ID for &quot;Integrated Address&quot; only; 16 hex chars" size="66" />
+					<br>
+					<br>
+				</div>
+				<label for="pubAddr">7. Public Address:&nbsp;</label>
+				<input type="text" id="pubAddr" placeholder="Public Address Base58" size="140" readonly="readonly" />
+			</div>
+			<br>
+		</div>
+		<br>
+		<br>
+	
+		
+
+	</div>
+ </body>
+ 
+ </html>
