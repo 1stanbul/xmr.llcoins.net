@@ -52,6 +52,8 @@ function mn_guess(str, wordset_name, target_address) {
 		}
 	}
 	
+	var target_pubSk = findPubAddr(target_address);
+	
 	if (mn_missing.length > 0 && mn_missing.length < 3)
 	{
 		console.log("Combinations: " + Math.pow(wordset.words.length,(mn_missing.length)));
@@ -109,10 +111,10 @@ function mn_guess(str, wordset_name, target_address) {
 					}
 					
 					pubSk = sec_key_to_pub(privSk);
-					pubVk = sec_key_to_pub(privVk);
-					address = toPublicAddr(netbyte, pubSk, pubVk);
-					if (address == target_address)
+					if (pubSk == target_pubSk)
 					{
+						pubVk = sec_key_to_pub(privVk);
+						address = toPublicAddr(netbyte, pubSk, pubVk);
 						console.log("It's a match! Address=" + address);
 						mnemonic.value = mn_encode(out);
 						hexSeed.value = out;
@@ -140,4 +142,20 @@ function mn_guess(str, wordset_name, target_address) {
 		console.log("Candidates: " + candidates);
 	}
 	else throw "nothing to guess or too many unknowns";
+}
+
+function findPubAddr(addr58){
+
+    if (addr58.length !== 95 && addr58.length !== 97 && addr58.length !== 51 && addr58.length !== 106){
+        validNo.innerHTML = "Invalid Address Length: " + addr58.length;
+        throw "Invalid Address Length!";
+    }
+    var addrHex = cnBase58.decode(addr58);
+
+    if (addrHex.length === 140){
+        pubSpend2 = addrHex.slice(4,68);
+    } else {
+        pubSpend2 = addrHex.slice(2,66);
+    }
+	return pubSpend2
 }
