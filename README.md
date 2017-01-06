@@ -8,4 +8,4 @@ XMR Tools Site Files
 3. checktx.html -- allows for the decoding of one-time-output keys of a particular transaction, associating them with their public account. This requires secret data (either the view private key, or the transaction private key) and an internet connection to MoneroBlocks to get the transaction data.
 4. sign.html -- generates and verifies signatures on arbitrary data using one of your account private keys (spend key or view key)
 5. slowhash.html -- generates the CryptoNight hash of hexadecimal input data; overall not too useful except for visually checking a block's PoW result
-6. addressrcv.html -- provides a simple tool to recover a mnemonic if one or two words are missing
+6. addressrcv.html -- provides a simple tool to recover a mnemonic if one or two words are missing, and address and checksum word is known.
