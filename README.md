@@ -9,3 +9,11 @@ XMR Tools Site Files
 4. sign.html -- generates and verifies signatures on arbitrary data using one of your account private keys (spend key or view key)
 5. slowhash.html -- generates the CryptoNight hash of hexadecimal input data; overall not too useful except for visually checking a block's PoW result
 6. addressrcv.html -- provides a simple tool to recover a mnemonic if one or two words are missing, and address and checksum word is known.
+
+Instructions for addressrcv.html
+- Click clone or download on this repo and get the zip, you'll get the full site
+- Extract to some folder and open addressrcv.html
+- Open developer tab (ctrl+shift+i in Chrome) and go to console if you want to see progress. You need to do this BEFORE you click recover.
+- Paste your address into 0. Target Address
+- Type your mnemonic into 1., and write <missing> in place of the word(s) you lost.
+- Click recover and let it work. It should complete in about 40min, and the <missing> will be replaced with the actual words!
