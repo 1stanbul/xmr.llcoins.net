@@ -15,5 +15,5 @@ Instructions for addressrcv.html
 - Extract to some folder and open addressrcv.html
 - Open developer tab (ctrl+shift+i in Chrome) and go to console if you want to see progress. You need to do this BEFORE you click recover.
 - Paste your address into 0. Target Address
-- Type your mnemonic into 1., and write <missing> in place of the word(s) you lost.
+- Type your mnemonic into 1., and write \<missing\> in place of the word(s) you lost.
 - Click recover and let it work. It should complete in about 40min, and the <missing> will be replaced with the actual words!
